@@ -95,16 +95,17 @@ namespace Microsoft.AspNetCore.Hosting
             });
         }
 
-        public static IWebHostBuilder ConfigureLogging(this IWebHostBuilder builder, Action<IHostingEnvironment, IConfiguration, LoggerFactory> configure)
+        public static IWebHostBuilder ConfigureLogging(this IWebHostBuilder builder, Action<IHostingContext, LoggerFactory> configure)
         {
             if(configure == null)
             {
                 throw new ArgumentNullException(nameof(configure));
             }
 
-            builder.UseLoggerFactory((env, conf) => {
+            builder.UseLoggerFactory(context =>
+            {
                 var loggerFactory = new LoggerFactory();
-                configure(env, conf, loggerFactory);
+                configure(context, loggerFactory);
                 return loggerFactory;
             });
 

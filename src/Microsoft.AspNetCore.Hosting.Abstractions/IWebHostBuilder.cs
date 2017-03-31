@@ -67,7 +67,7 @@ namespace Microsoft.AspNetCore.Hosting
         /// </summary>
         /// <param name="createLoggerFactory">The delegate that constructs an <see cref="IConfigurationBuilder" /></param>
         /// <returns>The <see cref="IWebHostBuilder"/>.</returns>
-        IWebHostBuilder UseLoggerFactory(Func<IHostingEnvironment, IConfiguration, ILoggerFactory> createLoggerFactory);
+        IWebHostBuilder UseLoggerFactory(Func<IHostingContext, ILoggerFactory> createLoggerFactory);
 
 
         /// <summary>
@@ -75,6 +75,6 @@ namespace Microsoft.AspNetCore.Hosting
         /// </summary>
         /// <param name="configureDelegate">The delegate for configuring the <see cref="IConfigurationBuilder" /> that will be used to construct an <see cref="IConfiguration" />.</param>
         /// <returns>The <see cref="IWebHostBuilder"/>.</returns>
-        IWebHostBuilder UseConfiguration(Action<IConfigurationBuilder, IHostingEnvironment> configureDelegate);
+        IWebHostBuilder UseConfiguration(Action<IHostingContext, IConfigurationBuilder> configureDelegate);
     }
 }

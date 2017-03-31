@@ -50,7 +50,7 @@ namespace Microsoft.AspNetCore.Hosting.Fakes
     {
         public static IWebHostBuilder ConfigureTestLogger(this IWebHostBuilder builder, Action<TestLoggerFactory> configureLogger)
         {
-            builder.UseLoggerFactory((env, config) =>
+            builder.UseLoggerFactory(context =>
             {
                 return new TestLoggerFactory();
             });

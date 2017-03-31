@@ -225,7 +225,7 @@ namespace Microsoft.AspNetCore.Hosting
             var loggerFactory = new LoggerFactory();
 
             var hostBuilder = new WebHostBuilder()
-                .UseLoggerFactory((env, config) => {
+                .UseLoggerFactory(_ => {
                     return loggerFactory;
                 })
                 .UseServer(new TestServer())
@@ -242,7 +242,7 @@ namespace Microsoft.AspNetCore.Hosting
             var callCount = 0; //Verify that multiple configureLogging calls still compose correctly.
             var loggerFactory = new LoggerFactory();
             var hostBuilder = new WebHostBuilder()
-                .UseLoggerFactory((_, __) => loggerFactory)
+                .UseLoggerFactory(_ => loggerFactory)
                 .ConfigureLogging(factory =>
                 {
                     Assert.Equal(0, callCount++);
@@ -269,14 +269,14 @@ namespace Microsoft.AspNetCore.Hosting
                 .UseServer(new TestServer())
                 .UseStartup<StartupNoServices>();
             var host = (WebHost)hostBuilder.Build();
-            Assert.IsType(typeof(TestLoggerFactory), host.Services.GetService<ILoggerFactory>());
+            Assert.IsType(typeof(Fakes.TestLoggerFactory), host.Services.GetService<ILoggerFactory>());
         }
 
         [Fact]
         public void CanConfigureConfigurationAndRetrieveFromDI()
         {
             var hostBuilder = new WebHostBuilder()
-                .UseConfiguration((configBuilder, env) =>
+                .UseConfiguration((_, configBuilder) =>
                 {
                     configBuilder.AddInMemoryCollection()
                                  .AddEnvironmentVariables();
