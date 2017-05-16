@@ -5,11 +5,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Server.IntegrationTesting;
-using Microsoft.AspNetCore.Server.IntegrationTesting.xunit;
 using Microsoft.AspNetCore.Testing.xunit;
 using Microsoft.Extensions.Logging.Testing;
 using Xunit;
 using Xunit.Abstractions;
+using System;
 
 namespace Microsoft.AspNetCore.Hosting.FunctionalTests
 {
@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.Hosting.FunctionalTests
             {
                 var logger = loggerFactory.CreateLogger(nameof(ShutdownTest));
 
-                var applicationPath = Path.Combine(TestProjectHelpers.GetSolutionRoot(), "test",
+                var applicationPath = Path.Combine(GetSolutionRoot(), "test",
                     "Microsoft.AspNetCore.Hosting.TestSites");
 
                 var deploymentParameters = new DeploymentParameters(
@@ -92,6 +92,26 @@ namespace Microsoft.AspNetCore.Hosting.FunctionalTests
             }
 
             Assert.Equal(0, process.ExitCode);
+        }
+
+        private static string GetSolutionRoot()
+        {
+            var applicationBasePath = AppContext.BaseDirectory;
+
+            var directoryInfo = new DirectoryInfo(applicationBasePath);
+            do
+            {
+                var projectFileInfo = new FileInfo(Path.Combine(directoryInfo.FullName, "Hosting.sln"));
+                if (projectFileInfo.Exists)
+                {
+                    return projectFileInfo.DirectoryName;
+                }
+
+                directoryInfo = directoryInfo.Parent;
+            }
+            while (directoryInfo.Parent != null);
+
+            throw new Exception($"Solution file Hosting.sln could not be found using {applicationBasePath}");
         }
     }
 }
